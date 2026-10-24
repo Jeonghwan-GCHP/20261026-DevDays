@@ -36,6 +36,7 @@
 
 - TypeScript를 사용하며 특히 데이터 레이어(`db/`, `src/lib/`)에서는 함수 매개변수와 반환값에 명시적 타입을 지정하세요
 - 프론트엔드 코드(TypeScript, Astro)는 ESLint 검사를 통과해야 합니다(`npm run lint`)
+- All new TypeScript should contain TSDocs comments for documentation purposes.
 
 ### 데이터 레이어 패턴 (Drizzle + Node SQLite)
 

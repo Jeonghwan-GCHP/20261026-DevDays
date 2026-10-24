@@ -25,6 +25,11 @@ type GameSelectionRow = {
     publisherName: string | null;
 };
 
+/**
+ * Maps a database row to a Game object with related publisher and category information.
+ * @param {GameSelectionRow} row - The database row containing game and related data
+ * @returns {Game} A Game object with joined publisher and category data
+ */
 function mapGame(row: GameSelectionRow): Game {
     return {
         id: row.id,
@@ -42,6 +47,12 @@ function mapGame(row: GameSelectionRow): Game {
     };
 }
 
+/**
+ * Builds the base query for fetching games with their related categories and publishers.
+ * Uses left joins to include category and publisher information.
+ * @param {Database} db - The injected database instance
+ * @returns The base Drizzle query builder for games with joins
+ */
 function baseGamesQuery(db: Database) {
     return db
         .select(gameSelection)
@@ -50,19 +61,33 @@ function baseGamesQuery(db: Database) {
         .leftJoin(publishers, eq(games.publisherId, publishers.id));
 }
 
-/** All games ordered by title. */
+/**
+ * Retrieves all games ordered by title.
+ * @param {Database} db - The injected database instance
+ * @returns {Promise<Game[]>} Array of all games with publisher and category information
+ */
 export async function getAllGames(db: Database): Promise<Game[]> {
     const rows = await baseGamesQuery(db).orderBy(asc(games.title));
     return rows.map(mapGame);
 }
 
-/** All game ids ordered by title. */
+/**
+ * Retrieves all game IDs ordered by title.
+ * Used for generating static routes in dynamic page generation.
+ * @param {Database} db - The injected database instance
+ * @returns {Promise<number[]>} Array of all game IDs in title order
+ */
 export async function getAllGameIds(db: Database): Promise<number[]> {
     const rows = await db.select({ id: games.id }).from(games).orderBy(asc(games.title));
     return rows.map((row) => row.id);
 }
 
-/** A single game by id, or null when it does not exist. */
+/**
+ * Retrieves a single game by its ID with all related information.
+ * @param {Database} db - The injected database instance
+ * @param {number} id - The game ID to fetch
+ * @returns {Promise<Game | null>} The game object if found, null otherwise
+ */
 export async function getGameById(db: Database, id: number): Promise<Game | null> {
     const row = await baseGamesQuery(db).where(eq(games.id, id)).get();
     return row ? mapGame(row) : null;
