@@ -22,6 +22,13 @@ test.describe('Game Listing and Navigation', () => {
       await expect(gameCards.first().getByTestId('game-title')).toBeVisible();
       await expect(gameCards.first().getByTestId('game-title')).not.toBeEmpty();
     });
+
+    await test.step('Verify game cards display rating information', async () => {
+      const gameCards = page.getByTestId('game-card');
+      const firstCard = gameCards.first();
+      const ratingElement = firstCard.getByTestId('game-rating');
+      await expect(ratingElement).toBeVisible();
+    });
   });
 
   test('should navigate to correct game details page when clicking on a game', async ({ page }) => {
@@ -131,6 +138,41 @@ test.describe('Game Listing and Navigation', () => {
       await expect(page.getByTestId('not-found')).toBeVisible();
       await expect(page.getByTestId('not-found-heading')).not.toBeEmpty();
       await expect(page.getByTestId('not-found-home-link')).toBeVisible();
+    });
+  });
+
+  test('should display star ratings or "No rating yet" on game cards', async ({ page }) => {
+    await test.step('Navigate to homepage', async () => {
+      await page.goto('/');
+    });
+
+    await test.step('Verify all game cards have rating display', async () => {
+      const gameCards = page.getByTestId('game-card');
+      const cardCount = await gameCards.count();
+      expect(cardCount).toBeGreaterThan(0);
+
+      for (let i = 0; i < cardCount; i++) {
+        const card = gameCards.nth(i);
+        const ratingElement = card.getByTestId('game-rating');
+        await expect(ratingElement).toBeVisible();
+        
+        const ratingText = await ratingElement.textContent();
+        const hasRating = ratingText?.includes('/') || false;
+        const hasNoRating = ratingText?.includes('No rating yet') || false;
+        
+        expect(hasRating || hasNoRating).toBeTruthy();
+      }
+    });
+
+    await test.step('Verify rating format for games with ratings', async () => {
+      const gameCards = page.getByTestId('game-card');
+      const firstCard = gameCards.first();
+      const ratingElement = firstCard.getByTestId('game-rating');
+      const ratingText = await ratingElement.textContent();
+
+      if (ratingText?.includes('/')) {
+        expect(ratingText).toMatch(/\d+(\.\d+)?\s*\/\s*5/);
+      }
     });
   });
 });
