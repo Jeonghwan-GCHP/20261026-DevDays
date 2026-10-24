@@ -1,70 +1,70 @@
 ---
-description: 'Central UI strategy and component development philosophy'
+description: 'UI 전략과 컴포넌트 개발 철학'
 ---
 
-# UI Component Strategy
+# UI 컴포넌트 전략
 
-This file defines the central UI development strategy for Tailspin Toys. Technology-specific guidance is in separate instruction files.
+이 파일은 Tailspin Toys의 중앙 UI 개발 전략을 정의합니다. 기술별 가이드는 별도의 지침 파일에 있습니다.
 
-## Component Architecture
+## 컴포넌트 아키텍처
 
-### Technology Separation
+### 기술 분리
 
-- **Astro** (`.astro` files): Pages, layouts, components, routing, and static content. The site is fully prerendered (`output: 'static'`), so components render to HTML at build time.
-- **Tailwind CSS** (utility classes): Styling
-- **Astro `<script>`**: Reach for a small client-side script only when genuine interactivity is required — there is no client-side UI framework.
+- **Astro** (`.astro` 파일): 페이지, 레이아웃, 컴포넌트, 라우팅 및 정적 콘텐츠. 사이트는 완전히 사전 렌더링됩니다(`output: 'static'`). 따라서 컴포넌트는 빌드 시간에 HTML로 렌더링됩니다.
+- **Tailwind CSS** (유틸리티 클래스): 스타일링
+- **Astro `<script>`**: 실제 클라이언트 상호작용이 필요할 때만 작은 클라이언트 측 스크립트를 고려하세요. 클라이언트 측 UI 프레임워크가 없습니다.
 
-Refer to technology-specific instruction files:
-- [`astro.instructions.md`](astro.instructions.md) - Astro pages, layouts, and components
-- [`style.instructions.md`](style.instructions.md) - Tailwind CSS styling patterns
+기술별 지침 파일을 참조하세요:
+- [`astro.instructions.md`](astro.instructions.md) - Astro 페이지, 레이아웃 및 컴포넌트
+- [`style.instructions.md`](style.instructions.md) - Tailwind CSS 스타일링 패턴
 
-## Core Principles
+## 핵심 원칙
 
-### Testability
+### 테스트 가능성
 
-- Every interactive element MUST include a `data-testid` attribute
-- Use descriptive test IDs that identify the element's purpose and context
-- Examples: `data-testid="game-card-{game.id}"`, `data-testid="submit-button"`, `data-testid="nav-home"`
+- 모든 인터랙티브 요소는 반드시 `data-testid` 속성을 포함해야 합니다
+- 요소의 목적과 컨텍스트를 식별하는 설명적인 테스트 ID를 사용하세요
+- 예시: `data-testid="game-card-{game.id}"`, `data-testid="submit-button"`, `data-testid="nav-home"`
 
-### Accessibility
+### 접근성
 
-- Use semantic HTML elements (`<nav>`, `<main>`, `<article>`, `<button>`)
-- Provide ARIA labels and roles where semantic HTML isn't sufficient
-- Use plain `<nav>` with `<a>`/`<button>` elements for site navigation — do **not** add `role="menu"`. Reserve `role="menu"` / `role="menuitem"` for true application-style menus that implement full composite keyboard semantics (arrow-key roving focus, Home/End, type-ahead)
-- Loading states should use `role="status"` and `aria-live="polite"` for screen reader announcements
-- Include Escape key handlers for dismissible elements (menus, modals)
-- Ensure keyboard navigation works for all interactive elements, with proper focus management
-- Include visible focus states: `focus:ring-2 focus:ring-blue-500 focus:outline-none`
-- Maintain sufficient color contrast (especially in dark theme)
+- 의미 있는 HTML 요소를 사용하세요(`<nav>`, `<main>`, `<article>`, `<button>`)
+- 의미 있는 HTML이 충분하지 않은 경우 ARIA 레이블 및 역할을 제공하세요
+- 사이트 네비게이션에는 일반 `<nav>` with `<a>`/`<button>` 요소를 사용하세요. `role="menu"`을 추가하지 마세요. 화살표 키 로빙 포커스, Home/End, 타입어헤드를 구현하는 진정한 애플리케이션 스타일 메뉴를 위해 `role="menu"` / `role="menuitem"`을 예약하세요
+- 로딩 상태는 스크린 리더 알림을 위해 `role="status"`와 `aria-live="polite"`을 사용해야 합니다
+- 해제 가능한 요소(메뉴, 모달)에 대해 Escape 키 핸들러를 포함하세요
+- 모든 인터랙티브 요소에서 키보드 네비게이션이 작동하는지 확인하고 포커스를 올바르게 관리하세요
+- 보이는 포커스 상태를 포함하세요: `focus:ring-2 focus:ring-blue-500 focus:outline-none`
+- 충분한 색상 대비를 유지하세요(특히 다크 테마에서)
 
-### Design Consistency
+### 디자인 일관성
 
-- Dark theme throughout the application
-- Modern, clean UI with rounded corners and smooth transitions
-- Consistent spacing and visual hierarchy
-- Responsive design that works on mobile, tablet, and desktop
+- 애플리케이션 전체에 다크 테마 사용
+- 둥근 모서리와 부드러운 전환이 있는 현대적이고 깨끗한 UI
+- 일관된 간격과 시각적 계층 구조
+- 모바일, 태블릿, 데스크톱에서 작동하는 반응형 디자인
 
-### Component Reusability
+### 컴포넌트 재사용성
 
-- Create reusable components for common UI patterns
-- Keep components focused on a single responsibility
-- Use props for configuration, not duplication
-- Document component APIs with TypeScript types
+- 일반적인 UI 패턴에 대해 재사용 가능한 컴포넌트를 만드세요
+- 컴포넌트를 단일 책임에 집중하게 하세요
+- 중복이 아닌 구성을 위해 props를 사용하세요
+- TypeScript 타입으로 컴포넌트 API를 문서화하세요
 
-## Development Workflow
+## 개발 워크플로우
 
-1. **Choose the right tool**: 
-   - Content & structure → Astro components/pages
-   - Styling → Tailwind
-   - Client interactivity (rare) → a scoped Astro `<script>`
+1. **올바른 도구 선택하기**: 
+   - 콘텐츠 & 구조 → Astro 컴포넌트/페이지
+   - 스타일링 → Tailwind
+   - 클라이언트 상호작용(드물게) → 범위가 지정된 Astro `<script>`
 
-2. **Follow technology-specific patterns**: 
-   - Refer to the appropriate instruction file
+2. **기술별 패턴 따르기**: 
+   - 적절한 지침 파일 참조
 
-3. **Ensure testability**: 
-   - Add `data-testid` to all interactive elements
+3. **테스트 가능성 보장**: 
+   - 모든 인터랙티브 요소에 `data-testid` 추가
 
-4. **Verify accessibility**: 
-   - Test keyboard navigation
-   - Check focus states
-   - Validate semantic structure
+4. **접근성 확인**: 
+   - 키보드 네비게이션 테스트
+   - 포커스 상태 확인
+   - 의미 있는 구조 검증
